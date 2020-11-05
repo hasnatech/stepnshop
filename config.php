@@ -1,15 +1,15 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://localhost/grocery_os');
+define('HTTP_SERVER', 'http://localhost/grocery_os/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://localhost/grocery_os');
+define('HTTPS_SERVER', 'http://localhost/grocery_os/');
 
 // DIR
-define('DIR_APPLICATION', 'catalog/');
-define('DIR_SYSTEM', 'system/');
-define('DIR_IMAGE', 'image/');
-define('DIR_STORAGE', 'storage/');
+define('DIR_APPLICATION', 'C:/wamp64/www/grocery_os/catalog/');
+define('DIR_SYSTEM', 'C:/wamp64/www/grocery_os/system/');
+define('DIR_IMAGE', 'C:/wamp64/www/grocery_os/image/');
+define('DIR_STORAGE', 'C:/wamp64/www/storage/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
@@ -26,5 +26,5 @@ define('DB_HOSTNAME', 'localhost');
 define('DB_USERNAME', 'root');
 define('DB_PASSWORD', '');
 define('DB_DATABASE', 'grocery');
-define('DB_PORT', '80');
-define('DB_PREFIX', 'ocup_');
+define('DB_PORT', '3306');
+define('DB_PREFIX', 'oc_');

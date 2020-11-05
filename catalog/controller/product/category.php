@@ -359,13 +359,7 @@ class ControllerProductCategory extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
 
-			//$this->response->setOutput($this->load->view('product/category', $data));
-			header('Access-Control-Allow-Origin: *');
-            header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-            header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization, X-Request-With');
-            header('Access-Control-Allow-Credentials: true');
-            $this->response->addHeader('Content-Type: application/json');
-			$this->response->setOutput(json_encode($data['products']));
+			$this->response->setOutput($this->load->view('product/category', $data));
 		} else {
 			$url = '';
 

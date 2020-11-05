@@ -446,11 +446,7 @@ class ControllerProductProduct extends Controller {
 			$data['footer'] = $this->load->controller('common/footer');
 			$data['header'] = $this->load->controller('common/header');
 
-            header("Access-Control-Allow-Origin: *");
-            $this->response->addHeader('Content-Type: application/json');
-            $this->response->setOutput(json_encode($product_info));
-			//$this->response->setOutput($this->load->view('product/product', $data));
-			//$this->response->setOutput(json_encode($data));
+			$this->response->setOutput($this->load->view('product/product', $data));
 		} else {
 			$url = '';
 
