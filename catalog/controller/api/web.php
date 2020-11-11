@@ -66,8 +66,9 @@ class ControllerApiWeb extends Controller {
 			'name'                  => $category['name'],
 			'description'           => $category['description'],
 			'href'                  => $this->url->link('api/web/products', 'category=' . $category['category_id'])
+			
 		);
-
+		
 		if ($this->debug) {
 			echo '<pre>';
 			print_r($json);
@@ -303,6 +304,7 @@ class ControllerApiWeb extends Controller {
 					'category_id'   => $category['category_id'],
 					'parent_id'     => $category['parent_id'],
 					'name'          => $category['name'],
+					'description'   => html_entity_decode($category['description'], ENT_QUOTES, 'UTF-8'),
 					'image'         => $image,
 					'href'          => $this->url->link('api/web/products', 'category=' . $category['category_id']),
 					'categories'    => $this->getCategoriesTree($category['category_id'], $level)
@@ -317,7 +319,7 @@ class ControllerApiWeb extends Controller {
 	 * 
 	 */
 	private function init() {
-
+ $this->response->addHeader("Access-Control-Allow-Origin: *");
 		$this->response->addHeader('Content-Type: application/json');
 
 		/*if (!$this->config->get('web_api_status')) {

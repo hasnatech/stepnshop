@@ -54,3 +54,5 @@ RewriteRule ^([^?]*) index.php?_route_=$1 [L,QSA]
 
 # 7. disable open_basedir limitations
 # php_admin_value open_basedir none
+
+

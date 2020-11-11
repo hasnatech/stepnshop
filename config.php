@@ -6,9 +6,9 @@ define('HTTP_SERVER', 'http://localhost/grocery_os/');
 define('HTTPS_SERVER', 'http://localhost/grocery_os/');
 
 // DIR
-define('DIR_APPLICATION', 'C:/wamp64/www/grocery_os/catalog/');
+define('DIR_APPLICATION', 'C:/wamp64/www/grocery_os/catalog/'); 
 define('DIR_SYSTEM', 'C:/wamp64/www/grocery_os/system/');
-define('DIR_IMAGE', 'C:/wamp64/www/grocery_os/image/');
+define('DIR_IMAGE', 'C:/wamp64/www/grocery_os/image');
 define('DIR_STORAGE', 'C:/wamp64/www/storage/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
