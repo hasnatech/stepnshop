@@ -16,7 +16,7 @@ class ControllerApiLogin extends Controller {
 
 		if ($api_info) {
 			// Check if IP is allowed
-			$ip_data = array();
+			/*$ip_data = array();
 	
 			$results = $this->model_account_api->getApiIps($api_info['api_id']);
 	
@@ -26,9 +26,9 @@ class ControllerApiLogin extends Controller {
 	
 			if (!in_array($this->request->server['REMOTE_ADDR'], $ip_data)) {
 				$json['error']['ip'] = sprintf($this->language->get('error_ip'), $this->request->server['REMOTE_ADDR']);
-			}				
+			}	*/			
 				
-			if (!$json) {
+			//if (!$json) {
 				$json['success'] = $this->language->get('text_success');
 				
 				$session = new Session($this->config->get('session_engine'), $this->registry);
@@ -41,11 +41,11 @@ class ControllerApiLogin extends Controller {
 				
 				// Create Token
 				$json['api_token'] = $session->getId();
-			} else {
-				$json['error']['key'] = $this->language->get('error_key');
-			}
+			//} else {
+			//	$json['error']['key'] = $this->language->get('error_key');
+			//}
 		}
-		
+		$this->response->addHeader("Access-Control-Allow-Origin: *");
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}

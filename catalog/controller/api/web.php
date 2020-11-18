@@ -319,7 +319,8 @@ class ControllerApiWeb extends Controller {
 	 * 
 	 */
 	private function init() {
- $this->response->addHeader("Access-Control-Allow-Origin: *");
+		 
+		$this->response->addHeader("Access-Control-Allow-Origin: *");
 		$this->response->addHeader('Content-Type: application/json');
 
 		/*if (!$this->config->get('web_api_status')) {

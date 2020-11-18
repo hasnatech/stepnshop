@@ -137,6 +137,7 @@ class ControllerCommonCart extends Controller {
 	}
 
 	public function info() {
+		//$this->response->addHeader("Access-Control-Allow-Origin: *");
 		$this->response->setOutput($this->index());
 	}
 }
