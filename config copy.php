@@ -6,7 +6,7 @@ define('HTTP_SERVER', 'http://localhost/grocery_os/');
 define('HTTPS_SERVER', 'http://localhost/grocery_os/');
 
 // DIR
-define('DIR_APPLICATION', 'C:/wamp64/www/grocery_os/catalog/');
+define('DIR_APPLICATION', 'C:/wamp64/www/grocery_os/catalog/'); 
 define('DIR_SYSTEM', 'C:/wamp64/www/grocery_os/system/');
 define('DIR_IMAGE', 'C:/wamp64/www/grocery_os/image');
 define('DIR_STORAGE', 'C:/wamp64/www/storage/');
@@ -23,8 +23,8 @@ define('DIR_UPLOAD', DIR_STORAGE . 'upload/');
 // DB
 define('DB_DRIVER', 'mysqli');
 define('DB_HOSTNAME', 'localhost');
-define('DB_USERNAME', 'myishop_admin');
-define('DB_PASSWORD', 'Tdo(VKIPUZLy');
-define('DB_DATABASE', 'myishop_grocery');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_DATABASE', 'grocery');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
