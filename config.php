@@ -1,15 +1,15 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://localhost/grocery_os/');
+define('HTTP_SERVER', 'http://myishop.com.my/public_html/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://localhost/grocery_os/');
+define('HTTPS_SERVER', 'https://myishop.com.my/public_html/');
 
-// DIR
-define('DIR_APPLICATION', 'C:/wamp64/www/grocery_os/catalog/');
-define('DIR_SYSTEM', 'C:/wamp64/www/grocery_os/system/');
-define('DIR_IMAGE', 'C:/wamp64/www/grocery_os/image');
-define('DIR_STORAGE', 'C:/wamp64/www/storage/');
+// DIR/home/myishop/public_html/config.php
+define('DIR_APPLICATION', '/home/myishop/public_html/catalog/');
+define('DIR_SYSTEM', '/home/myishop/public_html/system/');
+define('DIR_IMAGE', '/home/myishop/public_html/image');
+define('DIR_STORAGE', '/home/myishop/storage/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
