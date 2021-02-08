@@ -3,12 +3,12 @@
 define('HTTP_SERVER', 'http://myishop.com.my/');
 
 // HTTPS
-define('HTTPS_SERVER', 'https://myishop.com.my/');
+define('HTTPS_SERVER', 'http://myishop.com.my/');
 
 // DIR/home/myishop/public_html/config.php
-define('DIR_APPLICATION', '/home/myishop/catalog/');
-define('DIR_SYSTEM', '/home/myishop/system/');
-define('DIR_IMAGE', '/home/myishop/image');
+define('DIR_APPLICATION', '/home/myishop/public_html/catalog/');
+define('DIR_SYSTEM', '/home/myishop/public_html/system/');
+define('DIR_IMAGE', '/home/myishop/public_html/image');
 define('DIR_STORAGE', '/home/myishop/storage/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/theme/');
