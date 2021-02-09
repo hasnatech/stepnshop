@@ -1,12 +1,30 @@
 <?php
 class ModelCatalogCategory extends Model {
+		public function checkFieldModelChoice() {
+		  $hasModelChoiceField = FALSE;
+		  $result = $this->db->query( "DESCRIBE `".DB_PREFIX."category`");
+		  foreach ($result->rows as $row) {
+		     if ($row['Field'] == 'image_2') {
+		        $hasModelChoiceField = TRUE;
+		        break;
+		     }
+		  }
+		  if (!$hasModelChoiceField) {
+		     $sql = "ALTER TABLE `".DB_PREFIX."category` ADD `image_2` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT ''";
+		     $this->db->query( $sql );
+		  }
+		}
 	public function addCategory($data) {
+
 		$this->db->query("INSERT INTO " . DB_PREFIX . "category SET parent_id = '" . (int)$data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', `column` = '" . (int)$data['column'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW(), date_added = NOW()");
 
 		$category_id = $this->db->getLastId();
 
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "category SET image = '" . $this->db->escape($data['image']) . "' WHERE category_id = '" . (int)$category_id . "'");
+		}
+		if (isset($data['image_2'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "category SET image_2 = '" . $this->db->escape($data['image_2']) . "' WHERE category_id = '" . (int)$category_id . "'");
 		}
 
 		foreach ($data['category_description'] as $language_id => $value) {
@@ -61,10 +79,14 @@ class ModelCatalogCategory extends Model {
 	}
 
 	public function editCategory($category_id, $data) {
+
 		$this->db->query("UPDATE " . DB_PREFIX . "category SET parent_id = '" . (int)$data['parent_id'] . "', `top` = '" . (isset($data['top']) ? (int)$data['top'] : 0) . "', `column` = '" . (int)$data['column'] . "', sort_order = '" . (int)$data['sort_order'] . "', status = '" . (int)$data['status'] . "', date_modified = NOW() WHERE category_id = '" . (int)$category_id . "'");
 
 		if (isset($data['image'])) {
 			$this->db->query("UPDATE " . DB_PREFIX . "category SET image = '" . $this->db->escape($data['image']) . "' WHERE category_id = '" . (int)$category_id . "'");
+		}
+		if (isset($data['image_2'])) {
+			$this->db->query("UPDATE " . DB_PREFIX . "category SET image_2 = '" . $this->db->escape($data['image_2']) . "' WHERE category_id = '" . (int)$category_id . "'");
 		}
 
 		$this->db->query("DELETE FROM " . DB_PREFIX . "category_description WHERE category_id = '" . (int)$category_id . "'");

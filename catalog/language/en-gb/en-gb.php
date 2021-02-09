@@ -19,15 +19,21 @@ $_['text_all_zones']        = 'All Zones';
 $_['text_pagination']       = 'Showing %d to %d of %d (%d Pages)';
 $_['text_loading']          = 'Loading...';
 $_['text_no_results']       = 'No results!';
+$_['brand_heading_title']   = 'Our Popular Brands';
+$_['text_blog']    			= 'Blog';
+$_['text_sale']    			= 'sale';
+$_['entry_qty']    			= 'Qty';
+
 
 // Buttons
 $_['button_address_add']    = 'Add Address';
 $_['button_back']           = 'Back';
 $_['button_continue']       = 'Continue';
-$_['button_cart']           = 'Add to Cart';
+$_['button_cart']           = 'Add';
 $_['button_cancel']         = 'Cancel';
-$_['button_compare']        = 'Compare this Product';
-$_['button_wishlist']       = 'Add to Wish List';
+$_['button_compare']        = 'Compare';
+$_['button_wishlist']       = 'Wish List';
+$_['button_quickview']       ='quickview';
 $_['button_checkout']       = 'Checkout';
 $_['button_confirm']        = 'Confirm Order';
 $_['button_coupon']         = 'Apply Coupon';
@@ -69,7 +75,14 @@ $_['error_upload_7']        = 'Warning: Failed to write file to disk!';
 $_['error_upload_8']        = 'Warning: File upload stopped by extension!';
 $_['error_upload_999']      = 'Warning: No error code available!';
 $_['error_curl']            = 'CURL: Error Code(%s): %s';
+// Sent
+$_['error_newsletter_sent']           = 'Newsletter sent successfully!';
 
+// Error
+$_['error_news_email_duplicate']      = 'Your email is already in our database!';
+$_['error_news_email_invalid']        = 'E-Mail Address does not appear to be valid!';
+$_['error_news_email_required']       = 'E-mail is required!';
+$_['error_newsletter_fail']           = 'Failed to send newsletter!';
 /* When doing translations only include the matching language code */
 
 // Datepicker

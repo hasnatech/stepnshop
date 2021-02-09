@@ -1,0 +1,47 @@
+{{ header }}
+<div id="common-home">
+{{ content_top }}
+<div class="container">
+  <div class="row">{{ column_left }}
+    {% if column_left and column_right %}
+    {% set class = 'col-sm-6' %}
+    {% elseif column_left or column_right %}
+    {% set class = 'col-sm-9' %}
+    {% else %}
+    {% set class = 'col-sm-12' %}
+    {% endif %}
+    <div id="content" class="{{ class }}"><div class="breadcrumb"></div>{{ content_bottom }}</div>
+    {{ column_right }}</div></div>
+
+</div>
+<script>
+$(document).ready(function(){
+$('.product-carousel').owlCarousel({
+        items: 5,
+        autoPlay: false,
+        singleItem: false,
+        navigation: true,
+        pagination: false,
+        itemsDesktop : [1199,4],
+        itemsDesktopSmall : [991,3],
+        itemsTablet : [767,3],
+        itemsTabletSmall : [650,2],
+        itemsMobile : [479,1]
+    });
+   
+    $('.banner-carousel').owlCarousel({
+        items: 2,
+        autoPlay: false,
+        singleItem: false,
+        navigation: false,
+        pagination: true,
+        itemsDesktop : [1199,2],
+        itemsDesktopSmall : [991,2],
+        itemsTablet : [767,2],
+        itemsTabletSmall : [479,1],
+        itemsMobile : [319,1]
+    });
+    
+});
+</script>
+{{ footer }}

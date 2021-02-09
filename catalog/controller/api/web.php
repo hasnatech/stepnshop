@@ -1,20 +1,23 @@
 <?php
-class ControllerApiWeb extends Controller {
-	
+class ControllerApiWeb extends Controller
+{
+
 	private $debug = false;
 
-	public function index() {
-        $this->load->language('api/cart');
-    }
+	public function index()
+	{
+		$this->load->language('api/cart');
+	}
 
 	//get all category
-    public function categories() { 
+	public function categories()
+	{
 		$this->init();
 		$this->load->model('catalog/category');
 		$json = array('success' => true);
 
 		# -- $_GET params ------------------------------
-		
+
 		if (isset($this->request->get['parent'])) {
 			$parent = $this->request->get['parent'];
 		} else {
@@ -39,10 +42,11 @@ class ControllerApiWeb extends Controller {
 			$this->response->setOutput(json_encode($json));
 		}
 	}
-	
-	
+
+
 	//get single category
-	public function category() {
+	public function category()
+	{
 		$this->init();
 		$this->load->model('catalog/category');
 		$this->load->model('tool/image');
@@ -50,7 +54,7 @@ class ControllerApiWeb extends Controller {
 		$json = array('success' => true);
 
 		# -- $_GET params ------------------------------
-		
+
 		if (isset($this->request->get['id'])) {
 			$category_id = $this->request->get['id'];
 		} else {
@@ -60,15 +64,15 @@ class ControllerApiWeb extends Controller {
 		# -- End $_GET params --------------------------
 
 		$category = $this->model_catalog_category->getCategory($category_id);
-		
+
 		$json['category'] = array(
 			'id'                    => $category['category_id'],
 			'name'                  => $category['name'],
 			'description'           => $category['description'],
 			'href'                  => $this->url->link('api/web/products', 'category=' . $category['category_id'])
-			
+
 		);
-		
+
 		if ($this->debug) {
 			echo '<pre>';
 			print_r($json);
@@ -80,7 +84,8 @@ class ControllerApiWeb extends Controller {
 	// get all product of a category
 	// http://localhost/grocery_os/index.php?route=api/web/products&category=27
 
-	public function products() {
+	public function products()
+	{
 		$this->init();
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
@@ -88,7 +93,7 @@ class ControllerApiWeb extends Controller {
 
 
 		# -- $_GET params ------------------------------
-		
+
 		if (isset($this->request->get['category'])) {
 			$category_id = $this->request->get['category'];
 		} else {
@@ -112,7 +117,6 @@ class ControllerApiWeb extends Controller {
 
 			if ((float)$product['special']) {
 				$special = $this->currency->format($this->tax->calculate($product['special'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
-				
 			} else {
 				$special = false;
 			}
@@ -124,6 +128,7 @@ class ControllerApiWeb extends Controller {
 				'pirce'                 => $price,
 				'href'                  => $this->url->link('api/web/product', 'product_id=' . $product['product_id']),
 				'thumb'                 => $image,
+				'quantity'   			=> $this->cart->getQuantity($product['product_id']),
 				'special'               => $special,
 				'rating'                => $product['rating']
 			);
@@ -138,14 +143,15 @@ class ControllerApiWeb extends Controller {
 	}
 
 	//get single product
-	public function product() {
+	public function product()
+	{
 		$this->init();
 		$this->load->model('catalog/product');
 		$this->load->model('tool/image');
 		$json = array('success' => true);
 
 		# -- $_GET params ------------------------------
-		
+
 		if (isset($this->request->get['product_id'])) {
 			$product_id = $this->request->get['product_id'];
 		} else {
@@ -170,7 +176,7 @@ class ControllerApiWeb extends Controller {
 
 		foreach ($additional_images as $additional_image) {
 			//$images[] = $this->model_tool_image->resize($additional_image, $this->config->get('config_image_additional_width'), $this->config->get('config_image_additional_height'));
-			$images[] =$additional_image;
+			$images[] = $additional_image;
 		}
 
 		#specal
@@ -194,10 +200,10 @@ class ControllerApiWeb extends Controller {
 		#options
 		$options = array();
 
-		foreach ($this->model_catalog_product->getProductOptions($product['product_id']) as $option) { 
-			if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') { 
+		foreach ($this->model_catalog_product->getProductOptions($product['product_id']) as $option) {
+			if ($option['type'] == 'select' || $option['type'] == 'radio' || $option['type'] == 'checkbox' || $option['type'] == 'image') {
 				$option_value_data = array();
-				
+
 				foreach ($option['product_option_value'] as $option_value) {
 					if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
 						if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
@@ -205,7 +211,7 @@ class ControllerApiWeb extends Controller {
 						} else {
 							$price = false;
 						}
-						
+
 						$option_value_data[] = array(
 							'product_option_value_id' => $option_value['product_option_value_id'],
 							'option_value_id'         => $option_value['option_value_id'],
@@ -216,7 +222,7 @@ class ControllerApiWeb extends Controller {
 						);
 					}
 				}
-				
+
 				$options[] = array(
 					'product_option_id' => $option['product_option_id'],
 					'option_id'         => $option['option_id'],
@@ -224,7 +230,7 @@ class ControllerApiWeb extends Controller {
 					'type'              => $option['type'],
 					'option_value'      => $option_value_data,
 					'required'          => $option['required']
-				);					
+				);
 			} elseif ($option['type'] == 'text' || $option['type'] == 'textarea' || $option['type'] == 'file' || $option['type'] == 'date' || $option['type'] == 'datetime' || $option['type'] == 'time') {
 				$options[] = array(
 					'product_option_id' => $option['product_option_id'],
@@ -233,7 +239,7 @@ class ControllerApiWeb extends Controller {
 					'type'              => $option['type'],
 					'option_value'      => $option['product_option_value'],
 					'required'          => $option['required']
-				);						
+				);
 			}
 		}
 
@@ -273,17 +279,18 @@ class ControllerApiWeb extends Controller {
 		}
 	}
 
-    /**
+	/**
 	 * Generation of category tree
 	 * 
 	 * @param  int    $parent  Prarent category id
 	 * @param  int    $level   Depth level
 	 * @return array           Tree
 	 */
-	private function getCategoriesTree($parent = 0, $level = 1) {
+	private function getCategoriesTree($parent = 0, $level = 1)
+	{
 		$this->load->model('catalog/category');
 		$this->load->model('tool/image');
-		
+
 		$result = array();
 
 		$categories = $this->model_catalog_category->getCategories($parent);
@@ -294,8 +301,8 @@ class ControllerApiWeb extends Controller {
 			foreach ($categories as $category) {
 
 				if ($category['image']) {
-                    //$image = $this->model_tool_image->resize($category['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
-                    $image = $category['image'];
+					//$image = $this->model_tool_image->resize($category['image'], $this->config->get('config_image_category_width'), $this->config->get('config_image_category_height'));
+					$image = $category['image'];
 				} else {
 					$image = false;
 				}
@@ -314,12 +321,13 @@ class ControllerApiWeb extends Controller {
 			return $result;
 		}
 	}
-    
-    /**
+
+	/**
 	 * 
 	 */
-	private function init() {
-		 
+	private function init()
+	{
+
 		$this->response->addHeader("Access-Control-Allow-Origin: *");
 		$this->response->addHeader('Content-Type: application/json');
 
@@ -330,14 +338,15 @@ class ControllerApiWeb extends Controller {
 		if ($this->config->get('web_api_key') && (!isset($this->request->get['key']) || $this->request->get['key'] != $this->config->get('web_api_key'))) {
 			$this->error(20, 'Invalid secret key');
 		}*/
-    }
-    
-    /**
+	}
+
+	/**
 	 * Error message responser
 	 *
 	 * @param string $message  Error message
 	 */
-	private function error($code = 0, $message = '') {
+	private function error($code = 0, $message = '')
+	{
 
 		# setOutput() is not called, set headers manually
 		header('Content-Type: application/json');
@@ -354,7 +363,7 @@ class ControllerApiWeb extends Controller {
 		} else {
 			echo json_encode($json);
 		}
-		
+
 		exit();
 	}
 }

@@ -1,0 +1,127 @@
+{% if categories %}
+<nav id="menu" class="navbar collapse">
+<div class="navbar-header"> <span id="category" class="visible-xs">{{ text_category }}</span>
+  <button type="button" class="btn btn-navbar navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse"><i class="fa fa-bars"></i></button>
+</div>
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+  <ul class="nav navbar-nav main-navigation">
+    {% for category in categories %}
+    {% if category.children %}
+    <li class="main_cat dropdown">
+
+  <a href="{{ category.href }}">{{ category.name }}</a>
+      <div class="dropdown-menu megamenu column{{ category.column }}">
+       <div class="dropdown-inner">
+        {% for children in category.children|batch(category.children|length / category.column|round(1, 'ceil')) %}
+        <ul class="list-unstyled childs_1">
+
+          <!-- 2 Level Sub Categories START -->
+          {% for child in children %}
+          {% if child.childs %}
+          <li class="dropdown"><a href="{{ child.href }}">{{ child.name }}</a>
+            <div class="dropdown-menu">
+              <div class="dropdown-inner">
+              {% for childs_col in child.childs|batch(child.childs|length / child.column|round(1, 'ceil')) %}
+                <ul class="list-unstyled childs_2">
+                  {% for childs_2 in childs_col %}
+                  <li><a href="{{ childs_2.href }}">{{ childs_2.name }}</a></li>
+                  {% endfor %}
+                </ul>
+                {% endfor %}
+              </div>
+
+         </div>
+            </li>
+          {% else %}
+          <li class="main_cat">
+
+      <a href="{{ child.href }}">{{ child.name }}</a>  </li>
+          {% endif %}
+
+          {% endfor %}
+           <!-- 2 Level Sub Categories END -->
+        </ul>{% endfor %}
+      {% if category.thumb %}
+    <div class="menu-image">
+    <img src="{{ category.thumb }}" alt="" title="" class="img-thumbnail" />
+      </div>
+    {% endif %}
+
+
+
+         </div>
+
+
+         </div>
+    </li>
+
+    {% else %}
+    <li class="main_cat{% if category.thumb %} thumb{% endif %}">
+
+    <a href="{{ category.href }}">{{ category.name }} </a>
+     <div class="dropdown-menu">
+              <div class="dropdown-inner">
+  {% if category.thumb %}
+    <img src="{{ category.thumb }}" alt="" title="" class="img-thumbnail" />
+    {% endif %}
+
+    </div></div>
+  </li>{% endif %}
+    {% endfor %}
+
+  </ul>
+  </div>
+
+</nav>
+<div id="responsive-menu" class="nav-container1 nav-responsive navbar collapse">
+
+     <div class="navbar-collapse navbar-ex1-collapse collapse">
+              <ul class="nav navbar-nav">
+                {% for category in categories %}
+        {% if category.children %}
+        <li class="collapsed" data-toggle="collapse" data-target="#{{ category.name | replace({' ': '','&': '',';': '','/[^A-Za-z0-9\-]/':''}) }}"><a href="{{ category.href }}">{{ category.name }}</a>
+
+         <span><i class="fa fa-plus"></i></span>
+          <ul class="menu-dropdown collapse" id="{{ category.name | replace({' ': '','&': '',';': '','/[^A-Za-z0-9\-]/':''}) }}">
+           {% for children in category.children|batch(category.children|length / category.column|round(1, 'ceil')) %}
+
+            {% for child in children %}
+            {% if child.childs %}
+          <li class="dropdown"><a href="{{ child.href }}">{{ child.name }}</a>
+
+              {% for childs_col in child.childs|batch(child.childs|length / child.column|round(1, 'ceil')) %}
+                <ul class="list-unstyled childs_2">
+                  {% for childs_2 in childs_col %}
+                  <li><a href="{{ childs_2.href }}">{{ childs_2.name }}</a></li>
+                  {% endfor %}
+                </ul>
+                {% endfor %}
+
+            </li>
+          {% else %}
+          <li class="main_cat">
+
+      <a href="{{ child.href }}">{{ child.name }}</a>  </li>
+          {% endif %}
+            {% endfor %}
+
+            {% endfor %}
+            {% if category.thumb %}
+    <li>
+    <div class="menu-image">
+    <img src="{{ category.thumb }}" alt="" title="" class="img-thumbnail" />
+      </div>
+      </li>
+    {% endif %}
+          </ul>
+        </li>
+        {% else %}
+        <li><a href="{{ category.href }}">{{ category.name }}</a></li>
+        {% endif %}
+        {% endfor %}
+
+              </ul>
+            </div></div>
+
+
+ {% endif %}

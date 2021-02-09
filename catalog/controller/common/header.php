@@ -26,6 +26,25 @@ class ControllerCommonHeader extends Controller {
 
 		$data['title'] = $this->document->getTitle();
 
+	$current_path = $this->request->get;
+    if (empty($current_path) || $current_path['route'] == 'common/home') {
+      $body_class = 'common-home';
+    }
+    else {
+      $body_class = explode('/', str_replace('product/', '', $current_path['route']));
+      unset($current_path['route']);
+      if (isset($current_path['_route_'])) {
+        $body_class = array_merge($body_class, explode('/', str_replace('-', '_', $current_path['_route_'])));
+        unset($current_path['_route_']);
+      }
+      foreach ($current_path as $key => $value) {
+        $body_class[] = $key . "_" . $value;
+      }
+      $body_class = 'page_' . implode(" page_", array_unique($body_class));
+    }
+    $body_class .= ' lang_' . $this->language->get('code');
+    $data['body_class'] = $body_class;
+
 		$data['base'] = $server;
 		$data['description'] = $this->document->getDescription();
 		$data['keywords'] = $this->document->getKeywords();
@@ -34,9 +53,12 @@ class ControllerCommonHeader extends Controller {
 		$data['scripts'] = $this->document->getScripts('header');
 		$data['lang'] = $this->language->get('code');
 		$data['direction'] = $this->language->get('direction');
+		
 
 		$data['name'] = $this->config->get('config_name');
-
+		
+		
+		
 		if (is_file(DIR_IMAGE . $this->config->get('config_logo'))) {
 			$data['logo'] = $server . 'image/' . $this->config->get('config_logo');
 		} else {
@@ -57,6 +79,7 @@ class ControllerCommonHeader extends Controller {
 		$data['text_logged'] = sprintf($this->language->get('text_logged'), $this->url->link('account/account', '', true), $this->customer->getFirstName(), $this->url->link('account/logout', '', true));
 		
 		$data['home'] = $this->url->link('common/home');
+		$data['home'] = $this->url->link('common/home');
 		$data['wishlist'] = $this->url->link('account/wishlist', '', true);
 		$data['logged'] = $this->customer->isLogged();
 		$data['account'] = $this->url->link('account/account', '', true);
@@ -69,14 +92,20 @@ class ControllerCommonHeader extends Controller {
 		$data['shopping_cart'] = $this->url->link('checkout/cart');
 		$data['checkout'] = $this->url->link('checkout/checkout', '', true);
 		$data['contact'] = $this->url->link('information/contact');
+		$data['search_icon'] = $this->url->link('product/search', '', true);
 		$data['telephone'] = $this->config->get('config_telephone');
+		$data['mytemplate'] = $this->config->get('theme_oc01_directory');
 		
 		$data['language'] = $this->load->controller('common/language');
 		$data['currency'] = $this->load->controller('common/currency');
 		$data['search'] = $this->load->controller('common/search');
 		$data['cart'] = $this->load->controller('common/cart');
 		$data['menu'] = $this->load->controller('common/menu');
-
+		$data['column_left'] = $this->load->controller('common/column_left');
+		$data['column_right'] = $this->load->controller('common/column_right');
+		$data['header_bottom'] = $this->load->controller('common/header_bottom');
+		
+		
 		return $this->load->view('common/header', $data);
 	}
 }

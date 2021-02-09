@@ -1,0 +1,26 @@
+{% set bannerslide = 1 %}
+{% set bannercount = banners|length %}
+
+
+<div id="banner{{ module }}" class="{% if bannercount > bannerslide %} owl-carousel bannersslider{% else %}singlebanner section{% endif %}">
+  {% for banner in banners %}
+  <div class="item">
+    {% if banner.link %}
+    <a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /></a>
+    {% else %}
+    <img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />
+    {% endif %}
+  </div>
+ {% endfor %}
+</div>
+<script><!--
+$('.bannersslider').owlCarousel({
+	items: 1,
+	autoPlay: 3000,
+	singleItem: true,
+	navigation: false,
+	pagination: false,
+	transitionStyle: 'fade'
+});
+--></script>
+ 

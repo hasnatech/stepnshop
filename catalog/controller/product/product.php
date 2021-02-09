@@ -155,6 +155,7 @@ class ControllerProductProduct extends Controller {
 		}
 
 		$this->load->model('catalog/product');
+		$data['savetags'] = array();
 
 		$product_info = $this->model_catalog_product->getProduct($product_id);
 
@@ -238,6 +239,8 @@ class ControllerProductProduct extends Controller {
 			$data['manufacturer'] = $product_info['manufacturer'];
 			$data['manufacturers'] = $this->url->link('product/manufacturer/info', 'manufacturer_id=' . $product_info['manufacturer_id']);
 			$data['model'] = $product_info['model'];
+			$data['upc'] = $product_info['upc'];
+			$data['weight'] = $product_info['weight'];
 			$data['reward'] = $product_info['reward'];
 			$data['points'] = $product_info['points'];
 			$data['description'] = html_entity_decode($product_info['description'], ENT_QUOTES, 'UTF-8');
@@ -249,6 +252,15 @@ class ControllerProductProduct extends Controller {
 			} else {
 				$data['stock'] = $this->language->get('text_instock');
 			}
+
+			if ($product_info['quantity'] > 1) {
+				$data['quantity'] = $product_info['quantity'];
+			}elseif ($product_info['quantity'] <= 0) { 
+				$data['quantity'] = '0';
+			}else {
+				$data['quantity'] = $this->language->get('text_quantity');
+			}
+		
 
 			$this->load->model('tool/image');
 
@@ -263,6 +275,7 @@ class ControllerProductProduct extends Controller {
 			} else {
 				$data['thumb'] = '';
 			}
+			
 
 			$data['images'] = array();
 
@@ -287,6 +300,9 @@ class ControllerProductProduct extends Controller {
 				$data['special'] = false;
 			}
 
+        $data['neat_countdown'] = $this->load->controller('extension/module/neat_countdown');
+        
+
 			if ($this->config->get('config_tax')) {
 				$data['tax'] = $this->currency->format((float)$product_info['special'] ? $product_info['special'] : $product_info['price'], $this->session->data['currency']);
 			} else {
@@ -304,14 +320,46 @@ class ControllerProductProduct extends Controller {
 				);
 			}
 
+			
+			
+
 			$data['options'] = array();
 
 			foreach ($this->model_catalog_product->getProductOptions($this->request->get['product_id']) as $option) {
 				$product_option_value_data = array();
 
 				foreach ($option['product_option_value'] as $option_value) {
+					 // show total amount
+            if($this->config->get('module_live_options_status') && !$this->config->get('module_live_options_show_options_type') && $option_value['price'] > 0){
+                if ($option_value['price_prefix'] == '-' && $option_value['price']) {
+                    $option_value['price'] = (($product_info['special'] ? ($product_info['special'] - $option_value['price']) : ($product_info['price']) - $option_value['price']));
+                } elseif ($option_value['price_prefix'] == '+' && $option_value['price']) {
+                    $option_value['price'] = (($product_info['special'] ? ($product_info['special'] + $option_value['price']) : ($product_info['price']) + $option_value['price']));
+                }
+                $option_value['price_prefix'] = '';
+            }
 					if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
 						if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
+							// show total amount
+                if($this->config->get('module_live_options_status') && !$this->config->get('module_live_options_show_options_type')){
+                    $price = $this->currency->format($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+                }
+                else
+                	  // Ajax Live Options
+                if( $this->config->get('module_live_options_status') ){
+                    // show total
+                    if($this->config->get('module_live_options_show_options_type') == 0){
+                        if( $option_value['price_prefix'] == '-' ){
+                            $option_value['price'] = (($product_info['special'] ? ($product_info['special'] - $option_value['price']) : ($product_info['price']) - $option_value['price']));
+                        }
+                        elseif( $option_value['price_prefix'] == '+' ){
+                            $option_value['price'] = (($product_info['special'] ? ($product_info['special'] + $option_value['price']) : ($product_info['price']) + $option_value['price']));
+                        }
+                        $option_value['price_prefix'] = '';
+                    }
+                }
+
+
 							$price = $this->currency->format($this->tax->calculate($option_value['price'], $product_info['tax_class_id'], $this->config->get('config_tax') ? 'P' : false), $this->session->data['currency']);
 						} else {
 							$price = false;
@@ -372,12 +420,32 @@ class ControllerProductProduct extends Controller {
 			$data['share'] = $this->url->link('product/product', 'product_id=' . (int)$this->request->get['product_id']);
 
 			$data['attribute_groups'] = $this->model_catalog_product->getProductAttributes($this->request->get['product_id']);
+			  // Ajax Live Options
+            if($this->config->get('module_live_options_status')){
+                $data['module_live_options'] = array(
+                    'module_live_options_container' => substr($this->config->get('module_live_options_container'), 1),
+                    'module_live_options_special_container' => substr($this->config->get('module_live_options_special_container'), 1),
+                    'module_live_options_price_container' => substr($this->config->get('module_live_options_price_container'), 1),
+                    'module_live_options_tax_container' => substr($this->config->get('module_live_options_tax_container'), 1),
+                    'module_live_options_points_container' => substr($this->config->get('module_live_options_points_container'), 1),
+                    'module_live_options_reward_container' => substr($this->config->get('module_live_options_reward_container'), 1),
+                    'module_live_options_js' => $this->url->link('extension/module/live_options/js', 'product_id=' . (int)$this->request->get['product_id']),
+                );
+
+            }
 
 			$data['products'] = array();
 
 			$results = $this->model_catalog_product->getProductRelated($this->request->get['product_id']);
 
 			foreach ($results as $result) {
+				$images = $this->model_catalog_product->getProductImages($result['product_id']);
+				if(isset($images[0]['image']) && !empty($images[0]['image'])){
+						$images =$images[0]['image'];
+					} 
+					else {
+						$images ="";
+				}
 				if ($result['image']) {
 					$image = $this->model_tool_image->resize($result['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_height'));
 				} else {
@@ -385,9 +453,9 @@ class ControllerProductProduct extends Controller {
 				}
 
 				if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-					$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+					$price1 = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 				} else {
-					$price = false;
+					$price1 = false;
 				}
 
 				if ((float)$result['special']) {
@@ -408,17 +476,85 @@ class ControllerProductProduct extends Controller {
 					$rating = false;
 				}
 
-				$data['products'][] = array(
+				if($result['special'] > 0 AND $result['special'] != NULL ){
+						$tag_per = ($result['special']*100)/$result['price'];
+						$tag_per = round($tag_per);
+						if($tag_per == 0){
+						$tag_per = 1;
+						}else{
+						$tag_per = 100-$tag_per;
+						}
+						$tag1 = $result['price'] - $result['special'];
+						}else{
+						$tag1 = 0;
+						$tag_per = 0;
+						}
+						$data['options_r'] = array();
+
+					foreach ($this->model_catalog_product->getProductOptions($result['product_id']) as $option) {
+						$product_option_value_data = array();
+
+						foreach ($option['product_option_value'] as $option_value) {
+							if($this->config->get('module_live_options_show_options_type') == 0){
+                        if( $option_value['price_prefix'] == '-' ){
+                            $option_value['price'] = (($result['special'] ? ($result['special'] - $option_value['price']) : ($result['price']) - $option_value['price']));
+                        }
+                        elseif( $option_value['price_prefix'] == '+' ){
+                            $option_value['price'] = (($result['special'] ? ($result['special'] + $option_value['price']) : ($result['price']) + $option_value['price']));
+                        }
+                    	   $option_value['price_prefix'] = '';
+                    	}
+							if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+								if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
+									$price = $this->currency->format($this->tax->calculate($option_value['price'], $result['tax_class_id'], $this->config->get('config_tax') ? 'P' : false), $this->session->data['currency']);
+								} else {
+									$price = false;
+								}
+
+								$product_option_value_data[] = array(
+									'product_option_value_id' => $option_value['product_option_value_id'],
+									'option_value_id'         => $option_value['option_value_id'],
+									'name'                    => $option_value['name'],
+									'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+									'price'                   => $price,
+									'price_prefix'            => $option_value['price_prefix']
+								);
+							}
+						}
+
+						$data['options_r'][] = array(
+							'product_option_id'    => $option['product_option_id'],
+							'product_option_value' => $product_option_value_data,
+							'option_id'            => $option['option_id'],
+							'name'                 => $option['name'],
+							'type'                 => $option['type'],
+							'value'                => $option['value'],
+							'required'             => $option['required']
+						);
+					}
+
+					if ($result['minimum']) {
+						$data['minimum'] = $result['minimum'];
+					} else {
+						$data['minimum'] = 1;
+					}
+					$data['products'][] = array(
+					//'option'      => $this->model_catalog_product->getProductOptions($result['product_id']),
 					'product_id'  => $result['product_id'],
 					'thumb'       => $image,
+					'options'       => $data['options_r'],
+					'tag1'       => $tag1,
+					'tag_per' => $tag_per,
+					'thumb_swap'  => $this->model_tool_image->resize($images, $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_related_height')),
 					'name'        => $result['name'],
 					'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
-					'price'       => $price,
+					'price'       => $price1,
 					'special'     => $special,
 					'tax'         => $tax,
 					'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,
 					'rating'      => $rating,
-					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id'])
+					'href'        => $this->url->link('product/product', 'product_id=' . $result['product_id']),
+					'quick'        => $this->url->link('product/quickview', 'product_id=' . $result['product_id'])
 				);
 			}
 

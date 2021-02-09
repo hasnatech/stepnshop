@@ -1,0 +1,31 @@
+
+ <div  class="testimonial-block section fadeInUp" data-wow-duration="0.5s" data-wow-delay="0.5s">
+ <div class="section-heading">{{module_testimonials_heading}}</div>
+<div  class="testimonial owlCarousel">
+
+
+        {% for testimonial in testimonials %}
+       <div class="item">
+               <img class="testimonial-img img-responsive" src="{{ testimonial.thumb }}" alt="{{ testimonial.thumb }}" />
+              <div class="testmonial-author-name">{{testimonial.author}}</div>
+              <div class="testmonial-author">{{ testimonial.designation}}</div>
+              <div class="desc">{{testimonial.description}}</div>
+
+             </div>
+        {% endfor %}
+
+  </div>
+   </div>
+
+<script>
+    $(document).ready(function(){
+
+    $('.testimonial').owlCarousel({
+        items: 1,
+        autoPlay: true,
+        singleItem: true,
+        navigation: false,
+        pagination: false
+    });
+    });
+</script>

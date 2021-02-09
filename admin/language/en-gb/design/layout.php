@@ -11,10 +11,16 @@ $_['text_remove']         = 'Remove';
 $_['text_route']          = 'Choose the store and routes to be used with this layout';
 $_['text_module']         = 'Choose the position of the modules';
 $_['text_default']        = 'Default';
+$_['text_header_bottom']   = 'Header Bottom';
 $_['text_content_top']    = 'Content Top';
 $_['text_content_bottom'] = 'Content Bottom';
 $_['text_column_left']    = 'Column Left';
 $_['text_column_right']   = 'Column Right';
+$_['text_footer_top']     = 'Footer Left';
+$_['text_footer_right']   = 'Footer Bottom Down';
+$_['text_footer_bottom']    = 'Footer Bottom Up';
+$_['text_footer_left']   = 'Footer Right';
+$_['text_header_bottom']   = 'Header Bottom';
 
 // Column
 $_['column_name']         = 'Layout Name';

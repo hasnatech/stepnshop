@@ -46,9 +46,9 @@ class ControllerCommonCart extends Controller {
 
 			array_multisort($sort_order, SORT_ASC, $totals);
 		}
-
+		$data['heading_title_cart'] = $this->language->get('heading_title_cart');
 		$data['text_items'] = sprintf($this->language->get('text_items'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->session->data['currency']));
-
+		$data['text_items_res'] = sprintf($this->language->get('text_items_res'), $this->cart->countProducts() + (isset($this->session->data['vouchers']) ? count($this->session->data['vouchers']) : 0), $this->currency->format($total, $this->session->data['currency']));
 		$this->load->model('tool/image');
 		$this->load->model('tool/upload');
 
@@ -137,7 +137,6 @@ class ControllerCommonCart extends Controller {
 	}
 
 	public function info() {
-		//$this->response->addHeader("Access-Control-Allow-Origin: *");
 		$this->response->setOutput($this->index());
 	}
 }

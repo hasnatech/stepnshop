@@ -1,6 +1,6 @@
 <?php
 class ControllerCatalogProduct extends Controller {
-	private $error = array();
+    private $error = array();
 
 	public function index() {
 		$this->load->language('catalog/product');
@@ -8,6 +8,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('catalog/product');
+		$this->model_catalog_product->addFieldModelProduct();
 
 		$this->getList();
 	}
@@ -18,6 +19,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('catalog/product');
+		$this->model_catalog_product->addFieldModelProduct();
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->model_catalog_product->addProduct($this->request->post);
@@ -70,6 +72,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('catalog/product');
+		$this->model_catalog_product->addFieldModelProduct();
 
 		if (($this->request->server['REQUEST_METHOD'] == 'POST') && $this->validateForm()) {
 			$this->model_catalog_product->editProduct($this->request->get['product_id'], $this->request->post);
@@ -122,6 +125,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('catalog/product');
+		$this->model_catalog_product->addFieldModelProduct();
 
 		if (isset($this->request->post['selected']) && $this->validateDelete()) {
 			foreach ($this->request->post['selected'] as $product_id) {
@@ -176,6 +180,7 @@ class ControllerCatalogProduct extends Controller {
 		$this->document->setTitle($this->language->get('heading_title'));
 
 		$this->load->model('catalog/product');
+		$this->model_catalog_product->addFieldModelProduct();
 
 		if (isset($this->request->post['selected']) && $this->validateCopy()) {
 			foreach ($this->request->post['selected'] as $product_id) {
@@ -1043,6 +1048,13 @@ class ControllerCatalogProduct extends Controller {
 		} else {
 			$data['image'] = '';
 		}
+		if (isset($this->request->post['image2'])) {
+			$data['image2'] = $this->request->post['image2'];
+		} elseif (!empty($product_info)) {
+			$data['image2'] = $product_info['image2'];
+		} else {
+			$data['image2'] = '';
+		}
 
 		$this->load->model('tool/image');
 
@@ -1052,6 +1064,14 @@ class ControllerCatalogProduct extends Controller {
 			$data['thumb'] = $this->model_tool_image->resize($product_info['image'], 100, 100);
 		} else {
 			$data['thumb'] = $this->model_tool_image->resize('no_image.png', 100, 100);
+		}
+
+		if (isset($this->request->post['image2']) && is_file(DIR_IMAGE . $this->request->post['image2'])) {
+			$data['thumb2'] = $this->model_tool_image->resize($this->request->post['image2'], 100, 100);
+		} elseif (!empty($product_info) && is_file(DIR_IMAGE . $product_info['image2'])) {
+			$data['thumb2'] = $this->model_tool_image->resize($product_info['image2'], 100, 100);
+		} else {
+			$data['thumb2'] = $this->model_tool_image->resize('no_image.png', 100, 100);
 		}
 
 		$data['placeholder'] = $this->model_tool_image->resize('no_image.png', 100, 100);

@@ -1,18 +1,18 @@
 <?php
 // HTTP
-define('HTTP_SERVER', 'http://myishop.com.my/admin/');
-define('HTTP_CATALOG', 'http://myishop.com.my/');
+define('HTTP_SERVER', 'http://localhost/stepnshop/admin/');
+define('HTTP_CATALOG', 'http://localhost/stepnshop/');
 
 // HTTPS
-define('HTTPS_SERVER', 'http://myishop.com.my/admin/');
-define('HTTPS_CATALOG', 'http://myishop.com.my/');
+define('HTTPS_SERVER', 'http://localhost/stepnshop/admin/');
+define('HTTPS_CATALOG', 'http://localhost/stepnshop/');
 
 // DIR
-define('DIR_APPLICATION', '/home/myishop/public_html/admin/');
-define('DIR_SYSTEM', '/home/myishop/public_html/system/');
-define('DIR_IMAGE', '/home/myishop/public_html/image/');
-define('DIR_STORAGE', '/home/myishop/storage/');
-define('DIR_CATALOG', '/home/myishop/public_html/catalog/');
+define('DIR_APPLICATION', 'C:/wamp64/www/stepnshop/admin/');
+define('DIR_SYSTEM', 'C:/wamp64/www/stepnshop/system/');
+define('DIR_IMAGE', 'C:/wamp64/www/stepnshop/image/');
+define('DIR_STORAGE', 'C:/wamp64/www/storage/');
+define('DIR_CATALOG', 'C:/wamp64/www/stepnshop/catalog/');
 define('DIR_LANGUAGE', DIR_APPLICATION . 'language/');
 define('DIR_TEMPLATE', DIR_APPLICATION . 'view/template/');
 define('DIR_CONFIG', DIR_SYSTEM . 'config/');
@@ -26,9 +26,9 @@ define('DIR_UPLOAD', DIR_STORAGE . 'upload/');
 // DB
 define('DB_DRIVER', 'mysqli');
 define('DB_HOSTNAME', 'localhost');
-define('DB_USERNAME', 'myishop_admin');
-define('DB_PASSWORD', 'Tdo(VKIPUZLy');
-define('DB_DATABASE', 'myishop_grocery');
+define('DB_USERNAME', 'root');
+define('DB_PASSWORD', '');
+define('DB_DATABASE', 'grocery_1');
 define('DB_PORT', '3306');
 define('DB_PREFIX', 'oc_');
 

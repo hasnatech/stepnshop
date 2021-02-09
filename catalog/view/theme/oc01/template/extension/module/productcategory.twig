@@ -1,0 +1,60 @@
+<div class="category_product section wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="0.5s">
+{% for category in categories %}
+<div class="row">
+<div class="panel-heading">
+	<h4 class="panel-title">{{ category.name }}</h4>
+</div>
+
+{% if category.thumb %}
+<div class="col-sm-3 productcategory_thumb">
+<a href="{{ category.href }}"><img src="{{ category.thumb }}" alt="" title="" class="img-thumbnail" /></a>
+</div>
+<div class="col-sm-9 right_block">
+{% else %}
+<div class="col-sm-12 right_block">
+{% endif %}
+	  {% for product in category.products %}
+  <div class="product-layout col-lg-4 col-md-4 col-sm-6 col-xs-4">
+    <div class="product-thumb transition">
+      {% if product.tag_per  %}
+      <p class="tag">{{ product.tag_per }}<br/> % <br/> <i>off</i></p>
+      {% endif %}
+      <h4><a href="{{ product.href }}">{{ product.name }}</a></h4>
+    <div class="image"><a href="{{ product.href }}">
+    {% if product.thumb  %}
+    <img src="{{ product.thumb }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" />
+    {% else %}
+    <img src="{{ product.image }}" alt="{{ product.name }}" title="{{ product.name }}" class="img-responsive" />
+    {% endif %}
+    </a></div>
+      
+    <div class="caption">			
+			{% if product.price %}
+        <p class="price">
+		  {% if not product.special %}
+				{{ product.price }}
+			{% else %}
+				<span class="price-new">{{ product.special }}</span> <span class="price-old">{{ product.price }}</span>
+			{% endif %}
+		  {% if product.tax %}
+          <span class="price-tax">{{ text_tax }} {{ product.tax }}</span>
+			  {% endif %}
+        </p>
+        {% endif %}
+    </div>
+      <div class="button-group">
+        <button type="button" onclick="cart.add('{{ product.product_id }}');"><i class="fa fa-shopping-cart"></i> <span class="hidden-xs hidden-sm hidden-md">{{ button_cart }}</span></button>
+        <button type="button" data-toggle="tooltip" title="{{ button_wishlist }}" onclick="wishlist.add('{{ product.product_id }}');"><i class="fa fa-heart"></i></button>
+        <button type="button" data-toggle="tooltip" title="{{ button_compare }}" onclick="compare.add('{{ product.product_id }}');"><i class="fa fa-exchange"></i></button>
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+</div>
+  <div class="col-sm-12">
+  <div class="btn btn-primary viewall"><a href="{{ category.href }}">View All</a></div>
+  </div>
+</div>
+{% endfor %}
+</div>

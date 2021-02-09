@@ -1,6 +1,19 @@
 <?php
 class ControllerCommonFooter extends Controller {
 	public function index() {
+
+            	$this->load->language('product/search');
+            	$text_view_all_results = $this->config->get('module_live_search_view_all_results');
+            	$data['text_view_all_results'] = $text_view_all_results[$this->config->get('config_language_id')]['name'];
+
+                $data['module_live_search_status'] = $this->config->get('module_live_search_status');
+                $data['module_live_search_show_image'] = $this->config->get('module_live_search_show_image');
+                $data['module_live_search_show_price'] = $this->config->get('module_live_search_show_price');
+                $data['module_live_search_show_description'] = $this->config->get('module_live_search_show_description');
+                $data['module_live_search_min_length'] = $this->config->get('module_live_search_min_length');
+                $data['module_live_search_href'] = $this->url->link('product/search', 'search=');
+				
+            
 		$this->load->language('common/footer');
 
 		$this->load->model('catalog/information');
@@ -16,6 +29,7 @@ class ControllerCommonFooter extends Controller {
 			}
 		}
 
+		
 		$data['contact'] = $this->url->link('information/contact');
 		$data['return'] = $this->url->link('account/return/add', '', true);
 		$data['sitemap'] = $this->url->link('information/sitemap');
@@ -28,6 +42,11 @@ class ControllerCommonFooter extends Controller {
 		$data['order'] = $this->url->link('account/order', '', true);
 		$data['wishlist'] = $this->url->link('account/wishlist', '', true);
 		$data['newsletter'] = $this->url->link('account/newsletter', '', true);
+		$data['footer_top'] = $this->load->controller('common/footer_top');
+		$data['footer_bottom'] = $this->load->controller('common/footer_bottom');
+		$data['footer_left'] = $this->load->controller('common/footer_left');
+		$data['footer_right'] = $this->load->controller('common/footer_right');
+
 
 		$data['powered'] = sprintf($this->language->get('text_powered'), $this->config->get('config_name'), date('Y', time()));
 

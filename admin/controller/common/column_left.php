@@ -117,6 +117,15 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);					
 			}
+			if($this->config->get('module_testimonials_status')){
+                if ($this->user->hasPermission('access', 'extension/module/testimonials')) {		
+    				$catalog[] = array(
+    					'name'	   => $this->language->get('text_testimonials'),
+    					'href'     => $this->url->link('catalog/testimonials', 'user_token=' . $this->session->data['user_token'], true),
+    					'children' => array()		
+    				);					
+    			}
+			}
 			
 			if ($catalog) {
 				$data['menus'][] = array(
@@ -369,7 +378,14 @@ class ControllerCommonColumnLeft extends Controller {
 					'children' => array()		
 				);
 			}
-			
+			// Newsletter
+  		 	if ($this->user->hasPermission('access', 'marketing/newsletter')) { 
+                $marketing[] = array(
+                    'name'     => $this->language->get('text_newsletter'),
+                    'href'     => $this->url->link('marketing/newsletter', 'user_token=' . $this->session-> data['user_token'], true),
+                    'children' => array()       
+                );  
+			}
 			if ($marketing) {
 				$data['menus'][] = array(
 					'id'       => 'menu-marketing',

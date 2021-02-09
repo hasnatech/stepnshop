@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<!--[if IE 8 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie8"><![endif]-->
+<!--[if IE 9 ]><html dir="{{ direction }}" lang="{{ lang }}" class="ie9"><![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!-->
+<html dir="{{ direction }}" lang="{{ lang }}">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>{{ title }}</title>
+<base href="{{ base }}" />
+{% if description %}
+<meta name="description" content="{{ description }}" />
+{% endif %}
+{% if keywords %}
+<meta name="keywords" content="{{ keywords }}" />
+{% endif %}
+<script src="catalog/view/javascript/jquery/jquery-2.1.1.min.js"></script>
+<link href="catalog/view/javascript/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
+<script src="catalog/view/javascript/bootstrap/js/bootstrap.min.js"></script>
+<link href="catalog/view/javascript/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<link href="//fonts.googleapis.com/css?family=Nunito:400,400i,300,500,600,700" rel="stylesheet" type="text/css" />
+<link href="//fonts.googleapis.com/css?family=Roboto:300,400,400i,600,700" rel="stylesheet" type="text/css" />
+<link href="catalog/view/theme/{{ mytemplate }}/stylesheet/stylesheet.css" rel="stylesheet">
+<link href="catalog/view/theme/{{ mytemplate }}/stylesheet/bootstrap.min.css" rel="stylesheet">
+<link href="catalog/view/theme/{{ mytemplate }}/stylesheet/jquery.fancybox.css" rel="stylesheet">
+<link href="catalog/view/theme/{{ mytemplate }}/stylesheet/animate.css" rel="stylesheet">
+<link href="catalog/view/javascript/jquery/owl-carousel/owl.carousel.css" rel="stylesheet" type="text/css" />
+<link href="catalog/view/theme/{{ mytemplate }}/stylesheet/live_search.css" rel="stylesheet" type="text/css" />
+
+{% if direction=='rtl' %}
+<link rel="stylesheet" href="catalog/view/theme/{{ mytemplate }}/stylesheet/rtl.css">
+{% endif %}
+
+{% for style in styles %}
+<link href="{{ style.href }}" rel="{{ style.rel }}" media="{{ style.media }}" />
+{% endfor %}
+{% for script in scripts %}
+<script src="{{ script }}"></script>
+{% endfor %}
+<script src="catalog/view/javascript/common.js"></script>
+<script src="catalog/view/javascript/jquery.elevatezoom.min.js"></script>
+<script src="catalog/view/javascript/template_js/jstree.min.js"></script>
+<script src="catalog/view/javascript/tabs.js"></script>
+<script src="catalog/view/javascript/template_js/template.js"></script>
+<script src="catalog/view/javascript/template_js/jquery.firstVisitPopup.js"></script>
+<script src="catalog/view/javascript/template_js/simpleswap.js"></script>
+<script src="catalog/view/javascript/jquery.fancybox.js"></script>
+<script src="catalog/view/javascript/jquery/owl-carousel/owl.carousel.js"></script>
+<script src="catalog/view/javascript/template_js/wow.min.js"></script>
+
+<script>
+$(function () {
+$('.common-home #subscribe-me').firstVisitPopup({
+cookieName : 'bigoc01',
+showAgainSelector: '#show-message'
+});
+});
+</script>
+<script>
+$(document).ready(function(){
+$(".quickview").fancybox({
+type: 'iframe'
+});
+
+$(".fancybox").fancybox();
+
+
+});
+
+</script>
+{% for link in links %}
+<link href="{{ link.href }}" rel="{{ link.rel }}" />
+{% endfor %}
+{% for analytic in analytics %}
+{{ analytic }}
+{% endfor %}
+</head>
+{% if column_left and column_right %}
+{% set layoutclass = 'layout-3' %}
+{% elseif column_left %}
+{% set layoutclass = 'layout-2 left-col' %}
+{% elseif column_right %}
+{% set layoutclass = 'layout-2 right-col' %}
+{% else %}
+{% set layoutclass = 'layout-1' %}
+{% endif %}
+
+<body class="{{ body_class }} {{ layoutclass }}">
+<nav id="top">
+<div class="container">
+<div class="row">
+<span class="responsive-bar"><i class="fa fa-bars"></i></span>
+<div class="header-middle-outer closetoggle">
+</div>
+</div>
+</div>
+</nav>
+
+<header>
+<div class="header-block">
+<div class="container">
+<div class="row">
+<div class="header-top-block col-sm-12">
+  <div class="header-top-left pull-left">
+    {{ language }}
+    {{ currency }}
+  </div>
+  <div class="header-top-right pull-right">
+    <div class="telephone"><a href="{{ contact }}"><i class="fa fa-phone"></i>{{ telephone }}</a></div>
+    {% if logged %}
+    <div class="login"><a href="{{ account }}"><i class="fa fa-user"></i>{{ text_account }}</a></div>
+    <div><a href="{{ logout }}">{{ text_logout }}</a></div>
+     {% else %}
+    <div class="login"><a href="{{ login }}"><i class="fa fa-user"></i>{{ text_login }}</a></div>
+    <div><a href="{{ register }}">{{ text_register }}</a></div>
+    {% endif %}
+  </div>
+</div>
+<div class="header-bottom-block col-sm-12">
+  <div class="header-bottom-left col-xs-6 col-sm-2 col-md-2 col-lg-2">
+    <div class="header-logo">
+    <div id="logo">{% if logo %}<a href="{{ home }}"><img src="{{ logo }}" title="{{ name }}" alt="{{ name }}" class="img-responsive" /></a>{% else %}
+    <h1><a href="{{ home }}">{{ name }}</a></h1>
+    {% endif %}</div>
+    </div>
+  </div>
+  <div class="header-bottom-right col-xs-6 col-sm-10 col-md-10 col-lg-10">
+    <div class="header-cart">{{ cart }}</div>
+    <div class="header-link-search">
+    <div class="header-search">{{ search }}</div>
+    {{ header_bottom }}
+      </div>
+    <div class="header-menu">
+    <div class="responsive-menubar-block">
+      <span>{{ text_shop }}</span>
+    <span class="menu-bar collapsed" data-target="#menu" data-toggle="collapse"><i class="fa fa-bars"></i></span>
+    </div>
+    {{ menu }}
+    </div>
+ </div>
+</div>
+</div>
+</div>
+</div>
+<div class="header-static-block">
+<div class="container">
+<div class="row">
+<div class="icon-block">
+  <div class="home_icon">
+  <a href="{{ home }}"><i class="fa fa-home"></i>{{ text_home }}</a>
+  </div>
+  <div class="search_icon">
+  <a href="{{ search_icon }}"><i class="fa fa-search"></i>{{ text_search }}</a>
+  </div>
+  <div class="cart_icon">
+
+  </div>
+  <div class="login_icon">
+    {% if logged %}
+    <a href="{{ logout }}"><i class="fa fa-user"></i>{{ text_logout }}</a>
+    {% else %}
+    <a href="{{ login }}"><i class="fa fa-user"></i>{{ text_login }}</a>
+    {% endif %}
+  </div>
+  <div class="telephone_icon">
+    <a href="{{ contact }}"><i class="fa fa-phone"></i>{{ text_contact }}</a>
+  </div>
+</div>
+ </div>
+</div>
+</div>
+</header>
+<div class="content-top-breadcum">
+
+</div>

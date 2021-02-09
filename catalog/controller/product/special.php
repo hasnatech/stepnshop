@@ -88,9 +88,9 @@ class ControllerProductSpecial extends Controller {
 			}
 
 			if ($this->customer->isLogged() || !$this->config->get('config_customer_price')) {
-				$price = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
+				$price1 = $this->currency->format($this->tax->calculate($result['price'], $result['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']);
 			} else {
-				$price = false;
+				$price1 = false;
 			}
 
 			if ((float)$result['special']) {
@@ -111,12 +111,78 @@ class ControllerProductSpecial extends Controller {
 				$rating = false;
 			}
 
+			if($result['special'] > 0 AND $result['special'] != NULL ){
+			$tag_per = ($result['special']*100)/$result['price'];
+			$tag_per = round($tag_per);
+			if($tag_per == 0){
+			$tag_per = 1;
+			}else{
+			$tag_per = 100-$tag_per;
+			}
+			$tag = $result['price'] - $result['special'];
+			}else{
+			$tag = 0;
+			$tag_per = 0;
+			}
+			$data['options'] = array();
+
+					foreach ($this->model_catalog_product->getProductOptions($result['product_id']) as $option) {
+						$product_option_value_data = array();
+
+						foreach ($option['product_option_value'] as $option_value) {
+							if($this->config->get('module_live_options_show_options_type') == 0){
+                        if( $option_value['price_prefix'] == '-' ){
+                            $option_value['price'] = (($result['special'] ? ($result['special'] - $option_value['price']) : ($result['price']) - $option_value['price']));
+                        }
+                        elseif( $option_value['price_prefix'] == '+' ){
+                            $option_value['price'] = (($result['special'] ? ($result['special'] + $option_value['price']) : ($result['price']) + $option_value['price']));
+                        }
+                    	   $option_value['price_prefix'] = '';
+                    	}
+							if (!$option_value['subtract'] || ($option_value['quantity'] > 0)) {
+								if ((($this->config->get('config_customer_price') && $this->customer->isLogged()) || !$this->config->get('config_customer_price')) && (float)$option_value['price']) {
+									$price = $this->currency->format($this->tax->calculate($option_value['price'], $result['tax_class_id'], $this->config->get('config_tax') ? 'P' : false), $this->session->data['currency']);
+								} else {
+									$price = false;
+								}
+
+								$product_option_value_data[] = array(
+									'product_option_value_id' => $option_value['product_option_value_id'],
+									'option_value_id'         => $option_value['option_value_id'],
+									'name'                    => $option_value['name'],
+									'image'                   => $this->model_tool_image->resize($option_value['image'], 50, 50),
+									'price'                   => $price,
+									'price_prefix'            => $option_value['price_prefix']
+								);
+							}
+						}
+
+						$data['options'][] = array(
+							'product_option_id'    => $option['product_option_id'],
+							'product_option_value' => $product_option_value_data,
+							'option_id'            => $option['option_id'],
+							'name'                 => $option['name'],
+							'type'                 => $option['type'],
+							'value'                => $option['value'],
+							'required'             => $option['required']
+						);
+					}
+
+					if ($result['minimum']) {
+						$data['minimum'] = $result['minimum'];
+					} else {
+						$data['minimum'] = 1;
+					}
 			$data['products'][] = array(
+				//'option'      => $this->model_catalog_product->getProductOptions($result['product_id']),
 				'product_id'  => $result['product_id'],
 				'thumb'       => $image,
+				'tag'       => $tag,
+				'tag_per' => $tag_per,
+				'options'       => $data['options'],
 				'name'        => $result['name'],
 				'description' => utf8_substr(trim(strip_tags(html_entity_decode($result['description'], ENT_QUOTES, 'UTF-8'))), 0, $this->config->get('theme_' . $this->config->get('config_theme') . '_product_description_length')) . '..',
-				'price'       => $price,
+				'price'       => $price1,
 				'special'     => $special,
 				'tax'         => $tax,
 				'minimum'     => $result['minimum'] > 0 ? $result['minimum'] : 1,

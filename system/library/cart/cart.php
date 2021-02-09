@@ -1,9 +1,13 @@
 <?php
+
 namespace Cart;
-class Cart {
+
+class Cart
+{
 	private $data = array();
 
-	public function __construct($registry) {
+	public function __construct($registry)
+	{
 		$this->config = $registry->get('config');
 		$this->customer = $registry->get('customer');
 		$this->session = $registry->get('session');
@@ -30,11 +34,13 @@ class Cart {
 		}
 	}
 
-	public function getProducts() {
+	public function getProducts()
+	{
 		$product_data = array();
 
 		$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
-
+		//print_r("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		//print_r($this->db->escape($this->session->getId()));
 		foreach ($cart_query->rows as $cart) {
 			$stock = true;
 
@@ -269,7 +275,20 @@ class Cart {
 		return $product_data;
 	}
 
-	public function add($product_id, $quantity = 1, $option = array(), $recurring_id = 0) {
+	public function getQuantity($product_id)
+	{
+		//$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE (api_id > '0' OR customer_id = '0') AND date_added < DATE_SUB(NOW(), INTERVAL 1 HOUR) AND product_id='" . $product_id . "'");
+		$cart_query = $this->db->query("SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
+		print_r($this->db->escape($this->session->getId()));
+		//return "SELECT * FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'";
+		if ($cart_query->rows)
+			return $cart_query->row['quantity'];
+		else
+			return 0;
+	}
+
+	public function add($product_id, $quantity = 1, $option = array(), $recurring_id = 0)
+	{
 		$query = $this->db->query("SELECT COUNT(*) AS total FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "' AND product_id = '" . (int)$product_id . "' AND recurring_id = '" . (int)$recurring_id . "' AND `option` = '" . $this->db->escape(json_encode($option)) . "'");
 
 		if (!$query->row['total']) {
@@ -279,19 +298,23 @@ class Cart {
 		}
 	}
 
-	public function update($cart_id, $quantity) {
+	public function update($cart_id, $quantity)
+	{
 		$this->db->query("UPDATE " . DB_PREFIX . "cart SET quantity = '" . (int)$quantity . "' WHERE cart_id = '" . (int)$cart_id . "' AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 	}
 
-	public function remove($cart_id) {
+	public function remove($cart_id)
+	{
 		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE cart_id = '" . (int)$cart_id . "' AND api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 	}
 
-	public function clear() {
+	public function clear()
+	{
 		$this->db->query("DELETE FROM " . DB_PREFIX . "cart WHERE api_id = '" . (isset($this->session->data['api_id']) ? (int)$this->session->data['api_id'] : 0) . "' AND customer_id = '" . (int)$this->customer->getId() . "' AND session_id = '" . $this->db->escape($this->session->getId()) . "'");
 	}
 
-	public function getRecurringProducts() {
+	public function getRecurringProducts()
+	{
 		$product_data = array();
 
 		foreach ($this->getProducts() as $value) {
@@ -303,7 +326,8 @@ class Cart {
 		return $product_data;
 	}
 
-	public function getWeight() {
+	public function getWeight()
+	{
 		$weight = 0;
 
 		foreach ($this->getProducts() as $product) {
@@ -315,7 +339,8 @@ class Cart {
 		return $weight;
 	}
 
-	public function getSubTotal() {
+	public function getSubTotal()
+	{
 		$total = 0;
 
 		foreach ($this->getProducts() as $product) {
@@ -325,7 +350,8 @@ class Cart {
 		return $total;
 	}
 
-	public function getTaxes() {
+	public function getTaxes()
+	{
 		$tax_data = array();
 
 		foreach ($this->getProducts() as $product) {
@@ -345,7 +371,8 @@ class Cart {
 		return $tax_data;
 	}
 
-	public function getTotal() {
+	public function getTotal()
+	{
 		$total = 0;
 
 		foreach ($this->getProducts() as $product) {
@@ -355,7 +382,8 @@ class Cart {
 		return $total;
 	}
 
-	public function countProducts() {
+	public function countProducts()
+	{
 		$product_total = 0;
 
 		$products = $this->getProducts();
@@ -367,15 +395,18 @@ class Cart {
 		return $product_total;
 	}
 
-	public function hasProducts() {
+	public function hasProducts()
+	{
 		return count($this->getProducts());
 	}
 
-	public function hasRecurringProducts() {
+	public function hasRecurringProducts()
+	{
 		return count($this->getRecurringProducts());
 	}
 
-	public function hasStock() {
+	public function hasStock()
+	{
 		foreach ($this->getProducts() as $product) {
 			if (!$product['stock']) {
 				return false;
@@ -385,7 +416,8 @@ class Cart {
 		return true;
 	}
 
-	public function hasShipping() {
+	public function hasShipping()
+	{
 		foreach ($this->getProducts() as $product) {
 			if ($product['shipping']) {
 				return true;
@@ -395,7 +427,8 @@ class Cart {
 		return false;
 	}
 
-	public function hasDownload() {
+	public function hasDownload()
+	{
 		foreach ($this->getProducts() as $product) {
 			if ($product['download']) {
 				return true;

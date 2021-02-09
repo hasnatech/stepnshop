@@ -1,0 +1,29 @@
+<div class="section brand wow fadeInUp" data-wow-duration="0.5s" data-wow-delay="0.5s">
+<div class="section-heading">{{ brand_heading_title }}</div>   
+<div class="section-block">
+  <div id="carousel{{ module }}" class="manufacture-slider owl-carousel">
+  {% for banner in banners %}
+      <div class="product-thumb">
+      <div class="item text-center">{% if banner.link %}<a href="{{ banner.link }}"><img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" /></a>{% else %}<img src="{{ banner.image }}" alt="{{ banner.title }}" class="img-responsive" />{% endif %}</div></div>
+      {% endfor %}
+  </div>
+  </div>
+ </div>
+<script><!--
+
+$(document).ready(function(){
+$('.manufacture-slider').owlCarousel({
+        items: 6,
+		autoPlay: true,
+		singleItem: false,
+		navigation: false,
+		pagination: false,
+		itemsDesktop : [1199,5],
+		itemsDesktopSmall :	[991,4],
+		itemsTablet : [767,3],
+		itemsTabletSmall : [479,2],
+		itemsMobile : [360,2]
+	});
+
+});
+--></script>

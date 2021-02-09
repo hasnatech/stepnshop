@@ -1,13 +1,16 @@
+
 <?php
 // Text
 $_['text_search']              = 'Search';
 $_['text_brand']               = 'Brand';
 $_['text_manufacturer']        = 'Brand:';
 $_['text_model']               = 'Product Code:';
+$_['text_quntity']             = 'Quantity:';
 $_['text_reward']              = 'Reward Points:';
 $_['text_points']              = 'Price in reward points:';
 $_['text_stock']               = 'Availability:';
 $_['text_instock']             = 'In Stock';
+$_['text_quantity']            = 'Only 1 Left';
 $_['text_tax']                 = 'Ex Tax:';
 $_['text_discount']            = ' or more ';
 $_['text_option']              = 'Available Options';
@@ -30,6 +33,7 @@ $_['text_week']                = 'week';
 $_['text_semi_month']          = 'half-month';
 $_['text_month']               = 'month';
 $_['text_year']                = 'year';
+$_['text_sale']      = 'sale';
 
 // Entry
 $_['entry_qty']                = 'Qty';

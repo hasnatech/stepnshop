@@ -376,7 +376,6 @@ class ControllerCheckoutCart extends Controller {
 			}
 		}
 
-		$this->response->addHeader("Access-Control-Allow-Origin: *");
 		$this->response->addHeader('Content-Type: application/json');
 		$this->response->setOutput(json_encode($json));
 	}

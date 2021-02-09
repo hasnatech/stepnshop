@@ -1,0 +1,170 @@
+<script>
+    function regNewsletter()
+    {
+        var emailpattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        var email = $('#txtemail').val();
+        
+        if(email != "")
+        {
+            if(!emailpattern.test(email))
+            {
+                $("#text-danger-newsletter").remove();
+                $("#form-newsletter-error").removeClass("has-error");
+                $("#newsletter-email").append('<div class="text-danger" id="text-danger-newsletter">{{ error_news_email_invalid }}</div>');
+                $("#form-newsletter-error").addClass("has-error");
+
+                return false;
+            }
+            else
+            {
+                $.ajax({
+                    url: 'index.php?route=extension/module/newsletters/add',
+                    type: 'post',
+                    data: 'email=' + $('#txtemail').val(),
+                    dataType: 'json',
+                    async:false,
+
+                    success: function(json) {
+
+                        if (json.message == true) {                             
+                            alert('{{ error_newsletter_sent }}');
+                            document.getElementById("form-newsletter").reset();
+                            return true;                                                     
+                        }
+                        else {
+                            $("#text-danger-newsletter").remove();
+                            $("#form-newsletter-error").removeClass("has-error");
+                            $("#newsletter-email").append(json.message);
+                            $("#form-newsletter-error").addClass("has-error");
+                        }
+
+                    }
+                });
+                return false;
+            }
+        }
+        else
+        {
+
+            $("#text-danger-newsletter").remove();
+            $("#form-newsletter-error").removeClass("has-error");
+            $("#newsletter-email").append('<div class="text-danger" id="text-danger-newsletter">{{ error_news_email_required }}</div>');
+            $("#form-newsletter-error").addClass("has-error");
+
+            return false;
+        }
+    }
+     function regNewsletterpopup()
+    {
+        var emailpattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        var email = $('#txtemailpopup').val();
+        
+        if(email != "")
+        {
+            if(!emailpattern.test(email))
+            {
+                $("#text-danger-newsletter").remove();
+                $("#form-newsletter-error-popup").removeClass("has-error");
+                $("#newsletter-emailp").append('<div class="text-danger" id="text-danger-newsletter">{{ error_news_email_invalid }}</div>');
+                $("#form-newsletter-error-popup").addClass("has-error");
+
+                return false;
+            }
+            else
+            {
+                $.ajax({
+                    url: 'index.php?route=extension/module/newsletters/add',
+                    type: 'post',
+                    data: 'email=' + $('#txtemailpopup').val(),
+                    dataType: 'json',
+                    async:false,
+
+                    success: function(json) {
+
+                        if (json.message == true) {                             
+                            alert('{{ error_newsletter_sent }}');
+                            document.getElementById("form-newsletter").reset();
+                            $(".common-home #subscribe-me").modal('hide');
+                            return true;                                                     
+                        }
+                        else {
+                            $("#text-danger-newsletter").remove();
+                            $("#form-newsletter-error-popup").removeClass("has-error");
+                            $("#newsletter-emailp").append(json.message);
+                            $("#form-newsletter-error-popup").addClass("has-error");
+                        }
+
+                    }
+                });
+                return false;
+            }
+        }
+        else
+        {
+
+            $("#text-danger-newsletter").remove();
+            $("#form-newsletter-error-popup").removeClass("has-error");
+            $("#newsletter-emailp").append('<div class="text-danger" id="text-danger-newsletter">{{ error_news_email_required }}</div>');
+            $("#form-newsletter-error-popup").addClass("has-error");
+
+            return false;
+        }
+    }
+</script>
+
+
+
+<div id="subscribe-me" class="modal animated fade" role="dialog" data-keyboard="true" tabindex="-1">
+<div class="newsletter-popup">
+<div class="newsletter-popup-static newsletter-popup-top">
+<div class="popup-text">
+<div class="popup-title">{{ newsletter_static_title1 }} <span>{{ newsletter_static_title2 }}</span></div>
+<div class="popup-desc">
+<div>{{ newsletter_static_desc1 }}</div>
+<div>{{ newsletter_static_desc2 }}</div>
+</div>
+</div>
+<div class="newsform">    
+    <form method="post" class="form-horizontal" id="form-newsletter-popup">
+        <div class="form-group" id="form-newsletter-error-popup">
+            <div id="newsletter-emailp">
+                <input type="email" class="form-control input-lg" name="txtemailpopup" id="txtemailpopup" value="" placeholder="{{ text_subscribe_placeholder }}"/>
+            <button type="submit" onclick="return regNewsletterpopup();" class="btn btn-default btn-lg">                    
+                    {{ subscribe }}
+                </button>
+            </div>
+            <div class="col-xs-12">
+                
+                <label class="checkme"><input type="checkbox" value="" id="checkme"/>{{ chk_text }}</label>
+            </div>
+        </div>
+    </form>
+    
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="newsletters">
+<div class="news-head">
+<h4>{{ newsletter_title }}</h4>
+
+</div>
+<div class="news-form">
+    
+    <form method="post" class="form-horizontal" id="form-newsletter">
+        <div class="form-group" id="form-newsletter-error">
+               
+             <div id="newsletter-email">
+                <input type="email" name="txtemail" id="txtemail" value="" placeholder="{{ text_subscribe_placeholder }}" class="form-control"/>
+               <button type="submit" onclick="return regNewsletter();" id="email-popup-submit" class="btn btn-default btn-lg">                   
+                    {{ subscribe }}       </button>
+           
+            </div>
+                
+        </div>
+    </form>
+    
+</div>  
+</div>  

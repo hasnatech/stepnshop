@@ -1,9 +1,9 @@
 function getURLVar(key) {
-	var value = [];
+    var value = [];
 
-	var query = String(document.location).split('?');
+    var query = String(document.location).split('?');
 
-	if (query[1]) {
+    if (query[1]) {
 		var part = query[1].split('&');
 
 		for (i = 0; i < part.length; i++) {
@@ -100,9 +100,9 @@ $(document).ready(function() {
 		if (cols == 2) {
 			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-6 col-md-6 col-sm-12 col-xs-12');
 		} else if (cols == 1) {
-			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-4 col-md-4 col-sm-6 col-xs-12');
+			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-3 col-md-4 col-sm-4 col-xs-12');
 		} else {
-			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-3 col-md-3 col-sm-6 col-xs-12');
+			$('#content .product-list').attr('class', 'product-layout product-grid col-lg-3 col-md-3 col-sm-4 col-xs-12');
 		}
 
 		$('#list-view').removeClass('active');
@@ -138,10 +138,29 @@ $(document).ready(function() {
 // Cart add remove functions
 var cart = {
 	'add': function(product_id, quantity) {
+		//event.preventDefault();
+		if(document.getElementById("input-option-"+product_id)!=null){
+			productOption =document.getElementById("input-option-"+product_id).value;
+			if(productOption==''){
+				document.getElementById("input-option-"+product_id).focus();
+				document.getElementById("error-input-option-"+product_id).innerHTML="Please select...";
+				setTimeout('document.getElementById("error-input-option-"+product_id).innerHTML=""',1000)
+				return false;
+			}else{
+				document.getElementById("error-input-option-"+product_id).innerHTML="";
+			}
+
+			var pt 	   = productOption.split(":::");
+			var p 	   = pt[0];
+			var t 	   = pt[1];
+			var PRopt = '&option['+p+']='+t;
+		}else{
+			var PRopt = '';
+		}
 		$.ajax({
 			url: 'index.php?route=checkout/cart/add',
 			type: 'post',
-			data: 'product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+			data: 'product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1) + PRopt,
 			dataType: 'json',
 			beforeSend: function() {
 				$('#cart > button').button('loading');
@@ -157,16 +176,22 @@ var cart = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+				$('.breadcrumb').after('<div class="alertmsg"><div class="alert alert-success alert-dismissible">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div></div>');
 
 					// Need to set timeout otherwise it wont update the total
 					setTimeout(function () {
-						$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
+						$('#cart > .btn').addClass('active');
+						$('#cart > .btn').html('<span class="cart-text">My basket</span><span class="cart-total">Item ' + json['total'] + '</span><span class="cart-total-res">' + json['total'] +'</span>');
 					}, 100);
+					$('.alertmsg').delay(1500).fadeOut();
 
-					$('html, body').animate({ scrollTop: 0 }, 'slow');
+
+					//$('html, body').animate({ scrollTop: 0 }, 'slow');
 
 					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					$("button.close").click(function() {
+                        $(".alertmsg").remove()
+                    })
 				}
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
@@ -188,9 +213,9 @@ var cart = {
 			},
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
-				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
-				}, 100);
+				setTimeout(function () {					
+					$('#cart > .btn').html('<span class="cart-text">My basket</span><span class="cart-total">Item ' + json['total'] + '</span><span class="cart-total-res">' + json['total'] +'</span>');
+					}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
 					location = 'index.php?route=checkout/cart';
@@ -218,8 +243,11 @@ var cart = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
-				}, 100);
+				$('#cart > .btn').html('<span class="cart-text">My basket</span><span class="cart-total">Item ' + json['total'] + '</span><span class="cart-total-res">' + json['total'] +'</span>');
+					}, 100);
+				if (json['total'] == 0){
+					$('#cart > .btn').removeClass('active');
+				}
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
 					location = 'index.php?route=checkout/cart';
@@ -253,8 +281,8 @@ var voucher = {
 			success: function(json) {
 				// Need to set timeout otherwise it wont update the total
 				setTimeout(function () {
-					$('#cart > button').html('<span id="cart-total"><i class="fa fa-shopping-cart"></i> ' + json['total'] + '</span>');
-				}, 100);
+					$('#cart > .btn').html('<span class="cart-text">My basket</span><span class="cart-total">Item ' + json['total'] + '</span><span class="cart-total-res">' + json['total'] +'</span>');
+					}, 100);
 
 				if (getURLVar('route') == 'checkout/cart' || getURLVar('route') == 'checkout/checkout') {
 					location = 'index.php?route=checkout/cart';
@@ -268,6 +296,55 @@ var voucher = {
 		});
 	}
 }
+var addtocart = {
+    'add': function(product_id, quantity) {
+		$.ajax({
+			url: 'index.php?route=checkout/cart/add',
+			type: 'post',
+			data: 'product_id=' + product_id + '&quantity=' + (typeof(quantity) != 'undefined' ? quantity : 1),
+			dataType: 'json',
+			beforeSend: function() {
+				//$('#cart > button').button('loading');
+			},
+			complete: function() {
+				//$('#cart > button').button('reset');
+			},
+			success: function(json) {
+				$('.alert-dismissible, .text-danger').remove();
+
+				if (json['redirect']) {
+					location = json['redirect'];
+				}
+
+				if (json['success']) {
+					$('.breadcrumb').after('<div class="alertmsg"><div class="alert alert-success alert-dismissible">' + json['success'] + '<button type="button" class="close" data-dismiss="alert">&times;</button></div></div>');
+
+
+					// Need to set timeout otherwise it wont update the total
+					setTimeout(function () {
+						$('#cart > .btn').addClass('active');
+						$('#cart > .btn').html('<span class="cart-text">My basket</span><span class="cart-total">Item ' + json['total'] + '</span><span class="cart-total-res">' + json['total'] +'</span>');
+					}, 100);
+					$('.alertmsg').delay(1500).fadeOut();
+
+					//$('html, body').animate({ scrollTop: 0 }, 'slow');
+
+					$('#cart > ul').load('index.php?route=common/cart/info ul li');
+					$("button.close").click(function() {
+                        $(".alertmsg").remove()
+                    })
+				}
+			},
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+			}
+		});
+	},
+	'remove': function() {
+
+	}
+}
+
 
 var wishlist = {
 	'add': function(product_id) {
@@ -284,7 +361,7 @@ var wishlist = {
 				}
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('.breadcrumb').before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 				}
 
 				$('#wishlist-total span').html(json['total']);
@@ -313,7 +390,7 @@ var compare = {
 				$('.alert-dismissible').remove();
 
 				if (json['success']) {
-					$('#content').parent().before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
+					$('.breadcrumb').before('<div class="alert alert-success alert-dismissible"><i class="fa fa-check-circle"></i> ' + json['success'] + ' <button type="button" class="close" data-dismiss="alert">&times;</button></div>');
 
 					$('#compare-total').html(json['total']);
 

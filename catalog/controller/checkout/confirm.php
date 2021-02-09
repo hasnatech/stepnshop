@@ -34,6 +34,8 @@ class ControllerCheckoutConfirm extends Controller {
 			$redirect = $this->url->link('checkout/cart');
 		}
 
+		$this->load->model('tool/image');
+		$this->load->model('tool/upload');
 		// Validate minimum quantity requirements.
 		$products = $this->cart->getProducts();
 
@@ -51,6 +53,8 @@ class ControllerCheckoutConfirm extends Controller {
 
 				break;
 			}
+			
+
 		}
 
 		if (!$redirect) {
@@ -224,7 +228,7 @@ class ControllerCheckoutConfirm extends Controller {
 				}
 
 				$order_data['products'][] = array(
-					'product_id' => $product['product_id'],
+					'product_id' => $product['product_id'],					
 					'name'       => $product['name'],
 					'model'      => $product['model'],
 					'option'     => $option_data,
@@ -370,9 +374,16 @@ class ControllerCheckoutConfirm extends Controller {
 						$recurring .= sprintf($this->language->get('text_payment_cancel'), $this->currency->format($this->tax->calculate($product['recurring']['price'] * $product['quantity'], $product['tax_class_id'], $this->config->get('config_tax')), $this->session->data['currency']), $product['recurring']['cycle'], $frequencies[$product['recurring']['frequency']], $product['recurring']['duration']);
 					}
 				}
+				$this->load->model('tool/image');
+				if ($product['image']) {
+							$image = $this->model_tool_image->resize($product['image'], $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_width'), $this->config->get('theme_' . $this->config->get('config_theme') . '_image_cart_height'));
+				} else {
+					$image = '';
+				}
 
 				$data['products'][] = array(
 					'cart_id'    => $product['cart_id'],
+					'thumb'     => $image,
 					'product_id' => $product['product_id'],
 					'name'       => $product['name'],
 					'model'      => $product['model'],

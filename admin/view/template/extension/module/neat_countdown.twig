@@ -1,0 +1,131 @@
+{{ header }}{{ column_left }}
+
+<div id="content" class="ntcd">
+  <div class="page-header">
+    <div class="container-fluid">
+      <div class="pull-right">
+        <button type="submit" form="ntcd--form" data-toggle="tooltip" title="{{ common_save }}" class="btn btn-primary"><i class="fa fa-save"></i></button>
+        <a href="{{ cancel }}" data-toggle="tooltip" title="{{ common_cancel }}" class="btn btn-default"><i class="fa fa-reply"></i></a>
+      </div>
+
+      <h1>{{ heading_title }}</h1>
+
+      <ul class="breadcrumb">
+        {% for crumb in breadcrumbs %}
+          <li><a href="{{ crumb.href }}">{{ crumb.text }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="container-fluid">
+    {% for err in errors %}
+      {% if err %}
+        <div class="alert alert-danger"><i class="fa fa-exclamation-circle"></i> {{ err }}
+          <button type="button" class="close" data-dismiss="alert">&times;</button>
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-pencil"></i> {{ common_edit }}</h3>
+      </div>
+
+      <div class="panel-body">       
+
+        {# <script> window.NTCDServiceOff = true; </script> #}
+        <div class="ntcd--notification-service" data-except="{{ notification_except }}">
+          <template>
+            <div class="alert"><button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span></button></div>
+          </template>
+        </div>
+
+        <form action="{{ action }}" method="post" enctype="multipart/form-data" id="ntcd--form" class="form-horizontal">
+          <div class="form-group">
+            <label class="col-lg-2 col-md-3 col-sm-4 control-label" for="ntcd--name">{{ form_name }}: </label>
+            <div class="col-lg-10 col-md-9 col-sm-8">
+              <input type="text" class="form-control" id="ntcd--name" name="name" value="{{ name }}" maxlength="200" placeholder="{{ form_name }}">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="col-lg-2 col-md-3 col-sm-4"><b class="pull-right">{{ form_view }}</b></div>
+            <div class="col-lg-10 col-md-9 col-sm-8">
+              {% for view in views %}
+                <div class="radio">
+                  <label><input type="radio" name="view" value="{{ view.value }}"{{ view.value == current_view ? ' checked' }}> {{ view.label }}</label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+       
+        <div class="form-group">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+              <b class="pull-right">{{ form_layouts }}</b>
+              <br>
+              <div class="ntcd--icon-help help-block"><i class="fa fa-info-circle"></i> <span>{{ form_layouts_help }}</span></div>
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-8">
+              {% for layout in layouts %}
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="layout-4"{{ layout.checked ? ' checked' }}>
+                    {{ layout.suggested ? "<b>" }}{{ layout.label }}{{ layout.suggested ? "</b>" }}
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+{#
+          <div class="form-group">
+            <div class="col-lg-10 col-md-9 col-sm-8 col-lg-offset-2 col-md-offset-3 col-sm-offset-4">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="featured"{{ featured_checked ? ' checked' }}>
+                  <b>{{ form_featured_label }}</b>
+                </label>
+              </div>
+            </div>
+          </div> #}
+
+          <div class="form-group">
+            <label class="col-lg-2 col-md-3 col-sm-4 control-label" for="ntcd--status">{{ form_status }}</label>
+            <div class="col-lg-10 col-md-9 col-sm-8">
+              <select name="status" id="ntcd--status" class="form-control">
+                <option value="1"{{ status ? ' selected' }}>{{ form_enabled }}</option>
+                <option value="0"{{ not status ? ' selected' }}>{{ form_disabled }}</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group hide">
+            <div class="col-lg-2 col-md-3 col-sm-4">
+              <b class="pull-right">{{ form_clock_label }}</b>
+              <br>
+              <div class="ntcd--icon-help help-block"><i class="fa fa-exclamation-circle"></i> <span>{{ form_adv_setting }}</span></div>
+            </div>
+            <div class="col-lg-10 col-md-9 col-sm-8">
+              <div class="radio">
+                <label><input type="radio" name="clock" value="browser"{{ clock == 'browser' ? ' checked' }}> {{ form_clock_browser_label }}</label>
+                <span class="help-block">{{ form_clock_browser_help }}</span>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="clock" value="server"{{ clock == 'server' ? ' checked' }}> {{ form_clock_server_label }}</label>
+                <span class="help-block">{{ form_clock_server_help }}</span>
+              </div>
+              <div class="radio">
+                <label><input type="radio" name="clock" value="combo"{{ clock == 'combo' ? ' checked' }}> {{ form_clock_combo_label }}</label>
+                <span class="help-block">{{ form_clock_combo_help }}</span>
+                <label>{{ form_clock_critdiff }} <input type="number" name="clock--critdiff" value="{{ clock__critdiff }}" min="0" max="2147483647"></label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{ footer }}

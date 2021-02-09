@@ -60,6 +60,7 @@ $_['entry_length_class']     = 'Length Class';
 $_['entry_length']           = 'Length';
 $_['entry_width']            = 'Width';
 $_['entry_height']           = 'Height';
+$_['entry_bimage']           = 'Banner';
 $_['entry_image']            = 'Image';
 $_['entry_additional_image'] = 'Additional Images';
 $_['entry_customer_group']   = 'Customer Group';

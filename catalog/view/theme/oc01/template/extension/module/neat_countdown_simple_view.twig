@@ -1,0 +1,15 @@
+<script>
+  var NTCD = NTCD || {};
+  if (!NTCD.simple) NTCD.simple = {
+    lang: { expired: '{{ simple_text_expired }}' },
+    insts: {},
+  };
+  NTCD.simple.insts['{{ inst }}'] = {{ clock|json_encode }};
+</script>
+<div class="ntcd-simple ntcd-simple__invisible special-timer" data-inst="{{ inst }}">   
+  <div class="timer-date"><span class="ntcd-simple--days"  title="{{ simple_day_title }}"></span>
+  <span class="text">{{ simple_day_title }}</span>  </div>
+  <div class="timer-date"><span class="ntcd-simple--hours" title="{{ simple_hour_title }}"></span><span class="text">{{ simple_hour_title }}</span></div>
+  <div class="timer-date"><span class="ntcd-simple--mins" title="{{ simple_min_title }}"></span><span class="text">{{ simple_min_title }}</span></div>
+ <div class="timer-date"> <span class="ntcd-simple--secs" title="{{ simple_sec_title }}"></span><span class="text">{{ simple_sec_title }}</span></div>
+</div>

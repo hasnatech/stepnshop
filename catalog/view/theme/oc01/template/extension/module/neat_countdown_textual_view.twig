@@ -1,0 +1,9 @@
+<script>
+  var NTCD = NTCD || {}
+  if (!NTCD.textual) NTCD.textual = {
+    lang: {{ lang|json_encode }},
+    insts: {},
+  };
+  NTCD.textual.insts['{{ inst }}'] = {{ clock|json_encode }};
+</script>
+<div class="ntcd-textual" data-inst="{{ inst }}"></div>
